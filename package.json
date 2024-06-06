@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "firebase-analytics": "^1.0.1"
+  }
+}
