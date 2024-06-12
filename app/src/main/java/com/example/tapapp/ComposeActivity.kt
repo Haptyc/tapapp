@@ -1,48 +1,36 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.example.tapapp
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tapapp.databinding.ActivityComposeBinding
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class ComposeActivity : AppCompatActivity() {
@@ -56,13 +44,37 @@ class ComposeActivity : AppCompatActivity() {
     @Composable
     fun Grid() {
 
-        var count = 0
+        var visible by remember {
+            mutableStateOf(true)
+        }
+        var booleanArray = BooleanArray(4) { false }
+        var lastIndex = 0
+        var count = 0.toString()
         val green = Color.Green
         val red = Color.Red
 
-        ConstraintLayout {
-
-        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            content = {
+                items(4) { i ->
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(0.5f)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color.Green)
+                            .clickable {
+                                handleClicks(i)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AnimatedVisibility(visible = visible) {
+                            Text(count)
+                        }
+                    }
+                }
+            }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +83,9 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             Grid()
         }
+    }
+
+    private fun handleClicks(index: Int) {
 
     }
 }
