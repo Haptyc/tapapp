@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.example.tapapp.databinding.ActivityComposeBinding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 
 
 class ComposeActivity : AppCompatActivity() {
@@ -44,15 +42,16 @@ class ComposeActivity : AppCompatActivity() {
     @Composable
     fun Grid() {
 
-        var visible by remember {
-            mutableStateOf(true)
-        }
-        var booleanArray = BooleanArray(4) { false }
-        var lastIndex = 0
-        var count = 0.toString()
-        val green = Color.Green
-        val red = Color.Red
 
+        var counterArray = IntArray(4) { 0 }
+
+
+        var visible by remember {
+            mutableStateOf(false)
+        }
+        var currentRed by remember {
+            mutableStateOf(-1)
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             content = {
@@ -62,14 +61,22 @@ class ComposeActivity : AppCompatActivity() {
                             .aspectRatio(0.5f)
                             .padding(8.dp)
                             .clip(RoundedCornerShape(5.dp))
-                            .background(Color.Green)
+                            .background(
+                                color = if (i == currentRed) {
+                                    Color.Red
+                                } else {
+                                    Color.Green
+                                }
+                            )
                             .clickable {
-                                handleClicks(i)
+                                currentRed = i
+                                counterArray[i]++
+
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        AnimatedVisibility(visible = visible) {
-                            Text(count)
+                        AnimatedVisibility(visible = i == currentRed) {
+                            Text(counterArray[i].toString())
                         }
                     }
                 }
